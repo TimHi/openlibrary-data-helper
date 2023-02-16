@@ -19,9 +19,9 @@ var ddl string
 // go run main.go -reading /Users/hiller/dev/openlibrary-data-helper/dumps/reading.txt
 // go run main.go -transform top100
 func main() {
-	var readingLocation = flag.String("reading", "", "location for the reading data dump")
-	var ratingLocation = flag.String("rating", "", "location for the rating data dump")
-	var transformOperation = flag.String("transform", "", "operation to apply on the data")
+	var readingLocation = flag.String("reading", "", "path to the reading data dump .txt")
+	var ratingLocation = flag.String("rating", "", "path to the rating data dump .txt")
+	var transformOperation = flag.String("transform", "", "operation to apply on the data, available options: [top100]")
 	flag.Parse()
 
 	db, err := sql.Open("sqlite3", "sqlite.db")
