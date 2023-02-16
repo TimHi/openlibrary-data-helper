@@ -53,4 +53,5 @@ func main() {
 	} else {
 		log.Println("No file path specified")
 	}
+	log.Println("Everything done!")
 }

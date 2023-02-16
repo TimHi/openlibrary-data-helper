@@ -21,4 +21,4 @@ Terrible. Using SQLC apparently has no bulk insert for SQLite. At least I wasnt 
 
 ## Issues
 
-I'm not checking for existing tables when running the program. Delete the sqlite.db after runs.
+I'm not checking for existing entries. Duplicates may occure, I recommend running each dump only once. Checking for existing entries would make the performance even worse.
