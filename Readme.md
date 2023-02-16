@@ -22,3 +22,4 @@ Terrible. Using SQLC apparently has no bulk insert for SQLite. At least I wasnt 
 ## Issues
 
 I'm not checking for existing entries. Duplicates may occure, I recommend running each dump only once. Checking for existing entries would make the performance even worse.
+Also there is no brainwork done to handle larger files. The work or author dump should be a problem.

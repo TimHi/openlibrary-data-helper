@@ -10,15 +10,18 @@ import (
 	"github.com/timhi/openlibrary-data-helper/m/v2/data"
 	"github.com/timhi/openlibrary-data-helper/m/v2/database"
 	"github.com/timhi/openlibrary-data-helper/m/v2/parser"
+	"github.com/timhi/openlibrary-data-helper/m/v2/transform"
 )
 
 //go:embed data/schema.sql
 var ddl string
 
 // go run main.go -reading /Users/hiller/dev/openlibrary-data-helper/dumps/reading.txt
+// go run main.go -transform top100
 func main() {
 	var readingLocation = flag.String("reading", "", "location for the reading data dump")
 	var ratingLocation = flag.String("rating", "", "location for the rating data dump")
+	var transformOperation = flag.String("transform", "", "operation to apply on the data")
 	flag.Parse()
 
 	db, err := sql.Open("sqlite3", "sqlite.db")
@@ -53,5 +56,7 @@ func main() {
 	} else {
 		log.Println("No file path specified")
 	}
+
+	transform.Start(*transformOperation, *persistanceService, ctx)
 	log.Println("Everything done!")
 }

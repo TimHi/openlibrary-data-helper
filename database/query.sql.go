@@ -153,3 +153,46 @@ func (q *Queries) ListReadings(ctx context.Context) ([]Reading, error) {
 	}
 	return items, nil
 }
+
+const listTop100 = `-- name: ListTop100 :many
+SELECT id, workkey, editionkey, ratingvalue, datestamp
+FROM rating
+WHERE workkey IN (
+  SELECT workkey
+  FROM reading
+  WHERE shelf = 'Already Read'
+  GROUP BY workkey
+  HAVING COUNT(*) > 100
+)
+ORDER BY ratingvalue DESC
+LIMIT 100
+`
+
+func (q *Queries) ListTop100(ctx context.Context) ([]Rating, error) {
+	rows, err := q.db.QueryContext(ctx, listTop100)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []Rating
+	for rows.Next() {
+		var i Rating
+		if err := rows.Scan(
+			&i.ID,
+			&i.Workkey,
+			&i.Editionkey,
+			&i.Ratingvalue,
+			&i.Datestamp,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}

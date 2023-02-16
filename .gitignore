@@ -1,3 +1,4 @@
 dumps/
 sqlite.db
 sqlite.db-journal
+top100.json

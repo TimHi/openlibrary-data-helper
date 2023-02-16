@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	_ "embed"
 	"fmt"
+	"time"
 
 	_ "github.com/mattn/go-sqlite3"
 	"github.com/timhi/openlibrary-data-helper/m/v2/database"
@@ -71,4 +72,20 @@ func (s *PersistanceService) InsertRating(ctx context.Context, rating model.Rati
 	}
 
 	return nil
+}
+
+func (s *PersistanceService) GetTop100(ctx context.Context) ([]model.Rating, error) {
+	top100Data := []model.Rating{}
+	top100RawData, err := s.r.ListTop100(ctx)
+
+	if err != nil {
+		return nil, fmt.Errorf("error creating rating: %w", err)
+	}
+
+	for _, row := range top100RawData {
+		convertedDate, _ := time.Parse("YYYY-MM-DD", row.Datestamp.String)
+		top100Data = append(top100Data, model.Rating{WorkKey: row.Workkey, EditionKey: row.Editionkey.String, Rating: row.Ratingvalue.Float64, Date: convertedDate})
+	}
+
+	return top100Data, nil
 }
