@@ -1,2 +1,4 @@
 github.com/mattn/go-sqlite3 v1.14.16 h1:yOQRA0RpS5PFz/oikGwBEqvAWhWg5ufRz4ETLjwpU1Y=
 github.com/mattn/go-sqlite3 v1.14.16/go.mod h1:2eHXhiwb8IkHr+BDWZGa96P6+rkvnG63S2DGjv9HUNg=
+github.com/timhi/swiss-army-knife v1.0.3 h1:oxz6DBpIz6+IIpZc+GZ/XPcUuq1oH4Xgrzc6VQmdavk=
+github.com/timhi/swiss-army-knife v1.0.3/go.mod h1:mhLWZd0LazSmZrMWTWuEtSUXPEqL0xkJpjf7pk1BaPU=

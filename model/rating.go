@@ -6,6 +6,6 @@ import "time"
 type Rating struct {
 	WorkKey    string
 	EditionKey string
-	Rating     int
+	Rating     float64
 	Date       time.Time
 }

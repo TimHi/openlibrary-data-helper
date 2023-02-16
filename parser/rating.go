@@ -5,13 +5,13 @@ import (
 	"context"
 	"fmt"
 	"log"
-	"strconv"
 	"strings"
 	"time"
 
 	"github.com/timhi/openlibrary-data-helper/m/v2/data"
 	"github.com/timhi/openlibrary-data-helper/m/v2/model"
 	"github.com/timhi/openlibrary-data-helper/m/v2/util"
+	"github.com/timhi/swiss-army-knife/src/stringutil"
 )
 
 func RatingData(filePath string, persistanceService *data.PersistanceService, ctx context.Context) error {
@@ -65,10 +65,7 @@ func parseLineToRating(line string) (model.Rating, error) {
 		return model.Rating{}, fmt.Errorf("invalid date format: %s", fields[len(fields)-1])
 	}
 
-	ratingValue, errr := strconv.Atoi(fields[2])
-	if errr != nil {
-		return model.Rating{}, nil
-	}
+	ratingValue := stringutil.ParseFloat64(fields[2])
 
 	rating := model.Rating{
 		WorkKey:    fields[0],

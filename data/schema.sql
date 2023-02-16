@@ -1,4 +1,4 @@
-CREATE TABLE reading (
+CREATE TABLE IF NOT EXISTS reading (
     id INTEGER PRIMARY KEY,
     workkey text NOT NULL,
     editionkey text,
@@ -6,10 +6,10 @@ CREATE TABLE reading (
     datestamp text
 );
 
-CREATE TABLE rating (
+CREATE TABLE IF NOT EXISTS rating (
     id INTEGER PRIMARY KEY,
     workkey text NOT NULL,
     editionkey text,
-    ratingvalue INTEGER,
+    ratingvalue REAL,
     datestamp text
 );

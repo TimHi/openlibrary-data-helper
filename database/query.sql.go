@@ -53,7 +53,7 @@ INSERT INTO rating (workkey, editionkey, ratingvalue, datestamp) VALUES (?, ?, ?
 type InsertRatingParams struct {
 	Workkey     string
 	Editionkey  sql.NullString
-	Ratingvalue sql.NullInt64
+	Ratingvalue sql.NullFloat64
 	Datestamp   sql.NullString
 }
 

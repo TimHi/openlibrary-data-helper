@@ -56,9 +56,9 @@ func (s *PersistanceService) InsertRating(ctx context.Context, rating model.Rati
 			String: rating.EditionKey,
 			Valid:  true,
 		},
-		Ratingvalue: sql.NullInt64{
-			Int64: int64(rating.Rating),
-			Valid: true,
+		Ratingvalue: sql.NullFloat64{
+			Float64: rating.Rating,
+			Valid:   true,
 		},
 		Datestamp: sql.NullString{
 			String: rating.Date.String(),

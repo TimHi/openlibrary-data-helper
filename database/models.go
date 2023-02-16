@@ -12,7 +12,7 @@ type Rating struct {
 	ID          int64
 	Workkey     string
 	Editionkey  sql.NullString
-	Ratingvalue sql.NullInt64
+	Ratingvalue sql.NullFloat64
 	Datestamp   sql.NullString
 }
 
