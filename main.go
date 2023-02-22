@@ -1,20 +1,18 @@
 package main
 
 import (
-	"context"
-	"database/sql"
 	_ "embed"
 	"flag"
-	"log"
 
+	"github.com/charmbracelet/log"
 	"github.com/timhi/openlibrary-data-helper/m/v2/data"
-	"github.com/timhi/openlibrary-data-helper/m/v2/database"
+	"github.com/timhi/openlibrary-data-helper/m/v2/model"
 	"github.com/timhi/openlibrary-data-helper/m/v2/parser"
 	"github.com/timhi/openlibrary-data-helper/m/v2/transform"
+	"gorm.io/driver/sqlite"
+	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
 )
-
-//go:embed data/schema.sql
-var ddl string
 
 // go run main.go -reading /Users/hiller/dev/openlibrary-data-helper/dumps/reading.txt
 // go run main.go -transform top100
@@ -24,39 +22,37 @@ func main() {
 	var transformOperation = flag.String("transform", "", "operation to apply on the data, available options: [top100]")
 	flag.Parse()
 
-	db, err := sql.Open("sqlite3", "sqlite.db")
+	db, err := gorm.Open(sqlite.Open("sqlite.db"), &gorm.Config{Logger: logger.Default, SkipDefaultTransaction: true})
 	if err != nil {
 		log.Fatal(err)
 	}
-	ctx := context.Background()
-	// create tables
-	if _, err := db.ExecContext(ctx, ddl); err != nil {
-		log.Panic(err)
-	}
 
-	queries := database.New(db)
-	persistanceService := data.NewPersistanceService(queries)
+	//db.AutoMigrate(&model.Rating{})
+	db.AutoMigrate(&model.Reading{})
+	//db.AutoMigrate(&model.Work{})
+
+	persistanceService := data.NewPersistanceService(db)
 
 	if *readingLocation != "" {
-		log.Println("Start parsing reading data dump...")
-		err := parser.ReadingData(*readingLocation, persistanceService, ctx)
+		log.Info("Start parsing reading data dump...")
+		err := parser.ReadingData(*readingLocation, persistanceService)
 		if err != nil {
-			log.Fatal(err)
+			log.Error(err)
 		}
 	} else {
-		log.Println("No reading file path specified")
+		log.Info("No reading file path specified")
 	}
 
 	if *ratingLocation != "" {
-		log.Println("Start parsing ratingLocation data dump...")
-		err := parser.RatingData(*ratingLocation, persistanceService, ctx)
+		log.Info("Start parsing ratingLocation data dump...")
+		err := parser.RatingData(*ratingLocation, persistanceService)
 		if err != nil {
 			log.Fatal(err)
 		}
 	} else {
-		log.Println("No file path specified")
+		log.Info("No file path specified")
 	}
 
-	transform.Start(*transformOperation, *persistanceService, ctx)
-	log.Println("Everything done!")
+	transform.Start(*transformOperation, *persistanceService)
+	log.Info("Everything done!")
 }

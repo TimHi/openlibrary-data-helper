@@ -2,11 +2,11 @@ package parser
 
 import (
 	"bufio"
-	"context"
 	"fmt"
-	"log"
 	"strings"
 	"time"
+
+	"github.com/charmbracelet/log"
 
 	"github.com/timhi/openlibrary-data-helper/m/v2/data"
 	"github.com/timhi/openlibrary-data-helper/m/v2/model"
@@ -14,14 +14,14 @@ import (
 	"github.com/timhi/swiss-army-knife/src/stringutil"
 )
 
-func RatingData(filePath string, persistanceService *data.PersistanceService, ctx context.Context) error {
-	log.Println("Reading lines...")
+func RatingData(filePath string, persistanceService *data.PersistanceService) error {
+	log.Info("Reading lines...")
 	ratings, err := readRatingsFromFile(filePath)
 
 	if err != nil {
 		return err
 	}
-	return bulkInsertRatings(ratings, persistanceService, ctx)
+	return bulkInsertRatings(ratings, persistanceService)
 }
 
 func readRatingsFromFile(filePath string) ([]model.Rating, error) {
@@ -36,7 +36,7 @@ func readRatingsFromFile(filePath string) ([]model.Rating, error) {
 		rating, err := parseLineToRating(scanner.Text())
 		if err != nil {
 			//Guess we can ignore one off errors
-			log.Println(err)
+			log.Error(err)
 		} else {
 			readings = append(readings, rating)
 		}
@@ -77,10 +77,10 @@ func parseLineToRating(line string) (model.Rating, error) {
 	return rating, nil
 }
 
-func bulkInsertRatings(ratings []model.Rating, persistanceService *data.PersistanceService, ctx context.Context) error {
-	log.Printf("Insert %d ratings... \n", len(ratings))
+func bulkInsertRatings(ratings []model.Rating, persistanceService *data.PersistanceService) error {
+	log.Info("Insert %d ratings... \n", len(ratings))
 	for _, rating := range ratings {
-		err := persistanceService.InsertRating(ctx, rating)
+		err := persistanceService.InsertRating(rating)
 		if err != nil {
 			return err
 		}

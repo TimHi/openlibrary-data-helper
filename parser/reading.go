@@ -2,34 +2,34 @@ package parser
 
 import (
 	"bufio"
-	"context"
+
 	"fmt"
-	"log"
 	"strings"
 	"time"
+
+	"github.com/charmbracelet/log"
 
 	"github.com/timhi/openlibrary-data-helper/m/v2/data"
 	"github.com/timhi/openlibrary-data-helper/m/v2/model"
 	"github.com/timhi/openlibrary-data-helper/m/v2/util"
 )
 
-func ReadingData(filePath string, persistanceService *data.PersistanceService, ctx context.Context) error {
-	log.Println("Reading lines...")
+func ReadingData(filePath string, persistanceService *data.PersistanceService) error {
+	log.Info("Reading lines...")
 	readings, err := readReadingsFromFile(filePath)
 
 	if err != nil {
 		return err
 	}
-	return bulkInsertReadings(readings, persistanceService, ctx)
+	return bulkInsertReadings(readings, persistanceService)
 }
 
-func bulkInsertReadings(readings []model.Reading, persistanceService *data.PersistanceService, ctx context.Context) error {
-	log.Printf("Insert %d readings... \n", len(readings))
-	for _, reading := range readings {
-		err := persistanceService.InsertReading(ctx, reading)
-		if err != nil {
-			return err
-		}
+func bulkInsertReadings(readings []model.Reading, persistanceService *data.PersistanceService) error {
+
+	log.Info("Insert ", len(readings), " readings...")
+	err := persistanceService.InsertReadings(readings)
+	if err != nil {
+		return err
 	}
 	return nil
 }
@@ -46,7 +46,7 @@ func readReadingsFromFile(filePath string) ([]model.Reading, error) {
 		reading, err := parseLineToReading(scanner.Text())
 		if err != nil {
 			//Guess we can ignore one off errors
-			log.Println(err)
+			log.Error(err)
 		} else {
 			readings = append(readings, reading)
 		}

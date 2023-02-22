@@ -3,8 +3,9 @@ package transform
 import (
 	"encoding/json"
 	"io/ioutil"
-	"log"
 	"net/http"
+
+	"github.com/charmbracelet/log"
 
 	"github.com/timhi/openlibrary-data-helper/m/v2/model"
 )
@@ -19,7 +20,7 @@ func GetWorkFromApi(rating model.Rating) (model.Work, error) {
 	}
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		log.Fatalln(err)
+		log.Error(err)
 	}
 	//Convert the body to type string
 	sb := string(body)
