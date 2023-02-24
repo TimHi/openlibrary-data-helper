@@ -15,9 +15,11 @@ import (
 )
 
 // go run main.go -reading /Users/hiller/dev/openlibrary-data-helper/dumps/reading.txt
+// go run main.go -author /Users/hiller/dev/openlibrary-data-helper/dumps/authors.txt
 // go run main.go -transform top100
 func main() {
 	var readingLocation = flag.String("reading", "", "path to the reading data dump .txt")
+	var authorLocation = flag.String("author", "", "path to the author data dump .txt")
 	var ratingLocation = flag.String("rating", "", "path to the rating data dump .txt")
 	var transformOperation = flag.String("transform", "", "operation to apply on the data, available options: [top100]")
 	flag.Parse()
@@ -27,9 +29,9 @@ func main() {
 		log.Fatal(err)
 	}
 
-	//db.AutoMigrate(&model.Rating{})
+	db.AutoMigrate(&model.Rating{})
 	db.AutoMigrate(&model.Reading{})
-	//db.AutoMigrate(&model.Work{})
+	db.AutoMigrate(&model.Author{})
 
 	persistanceService := data.NewPersistanceService(db)
 
@@ -46,6 +48,16 @@ func main() {
 	if *ratingLocation != "" {
 		log.Info("Start parsing ratingLocation data dump...")
 		err := parser.RatingData(*ratingLocation, persistanceService)
+		if err != nil {
+			log.Fatal(err)
+		}
+	} else {
+		log.Info("No file path specified")
+	}
+
+	if *authorLocation != "" {
+		log.Info("Start parsing the author data dump...")
+		err := parser.AuthorData(*authorLocation, persistanceService)
 		if err != nil {
 			log.Fatal(err)
 		}

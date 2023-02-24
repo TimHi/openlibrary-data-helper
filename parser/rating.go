@@ -79,11 +79,6 @@ func parseLineToRating(line string) (model.Rating, error) {
 
 func bulkInsertRatings(ratings []model.Rating, persistanceService *data.PersistanceService) error {
 	log.Info("Insert %d ratings... \n", len(ratings))
-	for _, rating := range ratings {
-		err := persistanceService.InsertRating(rating)
-		if err != nil {
-			return err
-		}
-	}
+	persistanceService.InsertRatings(ratings)
 	return nil
 }

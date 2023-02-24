@@ -43,7 +43,24 @@ func (s *PersistanceService) InsertReading(reading model.Reading) error {
 	return nil
 }
 
-func (s *PersistanceService) InsertRating(rating model.Rating) error {
+func (s *PersistanceService) InsertRatings(ratings []model.Rating) error {
+	batchSize := 1000
+	batches := len(ratings) / batchSize
+
+	for i := 0; i <= batches; i++ {
+		start := i * batchSize
+		end := (i + 1) * batchSize
+
+		if end > len(ratings) {
+			end = len(ratings)
+		}
+
+		batch := ratings[start:end]
+
+		if err := s.db.Create(&batch).Error; err != nil {
+			return err
+		}
+	}
 
 	return nil
 }
