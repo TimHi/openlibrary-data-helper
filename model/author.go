@@ -4,56 +4,54 @@ import "gorm.io/gorm"
 
 type Author struct {
 	gorm.Model
-	ID             int `gorm:"primaryKey"`
-	AuthorType     Type
+	AuthorType     AuthorType
 	Name           string
 	Key            string
-	SourceRecord   []SourceRecords
+	SourceRecords  []SourceRecord
 	LatestRevision int
 	Revision       int
-	CreatedStruct  Created
+	Created        Created
 	LastMod        LastModified
 }
 
-type Type struct {
-	AuthorID int
-	Key      string
-}
-
-type LastModified struct {
-	AuthorID int
-	Typ      string
-	Value    string
-}
-
-type Created struct {
-	ID       int
-	AuthorID int
-	Typ      string
-	Value    string
-}
-
-type SourceRecords struct {
+type AuthorType struct {
 	gorm.Model
-	AuthorID     int
-	SourceRecord string
+	Key string
 }
 
 type AuthorJSON struct {
-	Type struct {
-		Key string `json:"key"`
-	} `json:"type"`
-	Name           string   `json:"name"`
-	Key            string   `json:"key"`
-	SourceRecords  []string `json:"source_records"`
-	LatestRevision int      `json:"latest_revision"`
-	Revision       int      `json:"revision"`
-	Created        struct {
-		Type  string `json:"type"`
-		Value string `json:"value"`
-	} `json:"created"`
-	LastModified struct {
-		Type  string `json:"type"`
-		Value string `json:"value"`
-	} `json:"last_modified"`
+	gorm.Model
+	AuthorID       int
+	AuthorType     AuthorType
+	Name           string
+	Key            string
+	SourceRecords  []SourceRecordJSON
+	LatestRevision int
+	Revision       int
+	CreatedAt      Created      `gorm:"embedded;embeddedPrefix:created_"`
+	LastModifiedAt LastModified `gorm:"embedded;embeddedPrefix:last_modified_"`
+}
+
+type SourceRecord struct {
+	gorm.Model
+	AuthorID     int // added foreign key field
+	SourceRecord string
+}
+
+type SourceRecordJSON struct {
+	SourceRecord string
+}
+
+type Type struct {
+	Key string
+}
+
+type LastModified struct {
+	Typ   string
+	Value string
+}
+
+type Created struct {
+	Typ   string
+	Value string
 }

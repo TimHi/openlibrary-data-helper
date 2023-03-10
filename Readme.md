@@ -15,20 +15,19 @@ Available options are:
         path to the reading data dump .txt
   -transform string
         operation to apply on the data, available options: [top100]
-`````
-
+```
 
 ## Whats done
 
-| Type  | Status  |  
-|---|---|
-| Ratings  |  ✅ |
-| Readings  |  ✅ |
-| Editions  |  ❌ |
-| Works  | ❌  |
-| Authors  | ❌  |
-| All Types  | ❌  |
-| Complete Dump  |  ❌ |
+| Type          | Status |
+| ------------- | ------ |
+| Ratings       | ✅     |
+| Readings      | ✅     |
+| Editions      | ❌     |
+| Works         | ❌     |
+| Authors       | ❌     |
+| All Types     | ❌     |
+| Complete Dump | ❌     |
 
 ## Transform
 
@@ -37,9 +36,12 @@ Afterwards the results are enriched with data from the `/work` endpoint and stor
 
 ## Performance
 
-Terrible. Using SQLC apparently has no bulk insert for SQLite. At least I wasnt able to find some. Feel free to open a PR to improve this.
+Could be better. Using Gorm it inserts faster.
 
 ## Issues
 
 I'm not checking for existing entries. Duplicates may occure, I recommend running each dump only once. Checking for existing entries would make the performance even worse.
-Also there is no brainwork done to handle larger files. The work or author dump should be a problem.
+
+## Future Work
+
+The database could be modeled smarter.

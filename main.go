@@ -6,7 +6,7 @@ import (
 
 	"github.com/charmbracelet/log"
 	"github.com/timhi/openlibrary-data-helper/m/v2/data"
-	"github.com/timhi/openlibrary-data-helper/m/v2/model"
+
 	"github.com/timhi/openlibrary-data-helper/m/v2/parser"
 	"github.com/timhi/openlibrary-data-helper/m/v2/transform"
 	"gorm.io/driver/sqlite"
@@ -29,11 +29,11 @@ func main() {
 		log.Fatal(err)
 	}
 
-	db.AutoMigrate(&model.Rating{})
-	db.AutoMigrate(&model.Reading{})
-	db.AutoMigrate(&model.Author{})
-
 	persistanceService := data.NewPersistanceService(db)
+	err = persistanceService.MigrateSchema()
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	if *readingLocation != "" {
 		log.Info("Start parsing reading data dump...")
